@@ -53,9 +53,9 @@ export default function ListingCard({ operator }: { operator: Operator }) {
           )}
         </div>
         <div className="flex items-center gap-2">
-          {operator.websiteStatus === "WORKING" && (
+          {operator.websiteStatus === "WORKING" && operator.website && (
             <a
-              href={operator.website}
+              href={operator.website.startsWith("http") ? operator.website : `https://${operator.website}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50"

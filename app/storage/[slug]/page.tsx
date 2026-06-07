@@ -7,14 +7,18 @@ import FAQSection from "@/src/components/FAQSection";
 import QuoteForm from "@/src/components/QuoteForm";
 import JsonLd from "@/src/components/JsonLd";
 import { MapPin, Tag, ExternalLink, ArrowRight, CheckCircle } from "lucide-react";
+import { Metadata } from "next";
 
 export function generateStaticParams() {
   return operators.map((o) => ({ slug: o.slug }));
 }
 
-export function generateMetadata() {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const operator = getOperatorBySlug(slug);
   return {
-    title: "Operator Details",
+    title: operator ? `${operator.name} — Storyard` : "Operator Details",
+    description: operator?.description,
   };
 }
 
@@ -200,9 +204,9 @@ export default async function OperatorDetailPage({ params }: { params: Promise<{
 
           {/* Sidebar */}
           <aside className="space-y-5">
-            {operator.websiteStatus === "WORKING" && (
+            {operator.websiteStatus === "WORKING" && operator.website && (
               <a
-                href={operator.website}
+                href={operator.website.startsWith("http") ? operator.website : `https://${operator.website}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50"
