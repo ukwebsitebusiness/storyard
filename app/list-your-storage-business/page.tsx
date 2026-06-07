@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/src/lib/supabase";
+
 export default function ListYourBusinessPage() {
   const router = useRouter();
   const [form, setForm] = useState({ businessName: "", contactName: "", email: "", phone: "", website: "", locations: "", types: "", message: "" });
@@ -22,16 +24,19 @@ export default function ListYourBusinessPage() {
     e.preventDefault();
     if (!validate()) return;
     setSubmitting(true);
-    try {
-      await fetch("/api/quote", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, type: "list-business", sourcePage: "/list-your-storage-business/" }),
-      });
-      router.push("/thank-you/");
-    } catch {
+    const { error } = await supabase.from("leads").insert({
+      name: form.contactName || form.businessName,
+      email: form.email,
+      phone: form.phone || null,
+      storage_type: form.types || null,
+      location: form.locations || null,
+      notes: JSON.stringify({ type: "list-business", sourcePage: "/list-your-storage-business/", businessName: form.businessName, website: form.website, message: form.message }),
+    });
+    if (error) {
       setSubmitting(false);
+      return;
     }
+    router.push("/thank-you/");
   }
 
   function update(field: string, value: string) {

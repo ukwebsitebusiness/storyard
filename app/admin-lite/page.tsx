@@ -3,27 +3,32 @@
 import { useEffect, useState } from "react";
 import { operators } from "@/src/data/operators";
 import { prices } from "@/src/data/prices";
+import { supabase } from "@/src/lib/supabase";
 
-interface Submission {
-  name?: string;
-  businessName?: string;
-  email?: string;
-  type?: string;
-  sourcePage?: string;
-  submittedAt?: string;
+interface Lead {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  storage_type: string | null;
+  location: string | null;
+  notes: string | null;
+  created_at: string;
 }
 
 export default function AdminLitePage() {
-  const [submissions, setSubmissions] = useState<Submission[]>([]);
+  const [submissions, setSubmissions] = useState<Lead[]>([]);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch("/api/quote")
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.submissions) setSubmissions(data.submissions as Submission[]);
-      })
-      .catch(() => setError("Could not load submissions. API routes are not available in static export mode."));
+    supabase
+      .from("leads")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .then(({ data, error }) => {
+        if (error) setError(error.message);
+        else if (data) setSubmissions(data as Lead[]);
+      });
   }, []);
 
   const claimedCount = operators.filter((o) => o.claimed).length;
@@ -99,7 +104,7 @@ export default function AdminLitePage() {
       <div className="mt-8">
         <h2 className="text-lg font-bold text-slate-900">Submissions</h2>
         {submissions.length === 0 ? (
-          <p className="mt-2 text-sm text-slate-600">No submissions yet. In static export mode, API routes are not available.</p>
+          <p className="mt-2 text-sm text-slate-600">No submissions yet.</p>
         ) : (
           <div className="mt-3 overflow-hidden rounded-xl border border-slate-200">
             <table className="w-full text-sm">
@@ -108,20 +113,27 @@ export default function AdminLitePage() {
                   <th className="px-4 py-3 text-left font-semibold text-slate-700">Type</th>
                   <th className="px-4 py-3 text-left font-semibold text-slate-700">Name</th>
                   <th className="px-4 py-3 text-left font-semibold text-slate-700">Email</th>
-                  <th className="px-4 py-3 text-left font-semibold text-slate-700">Source</th>
+                  <th className="px-4 py-3 text-left font-semibold text-slate-700">Phone</th>
+                  <th className="px-4 py-3 text-left font-semibold text-slate-700">Location</th>
                   <th className="px-4 py-3 text-left font-semibold text-slate-700">Date</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {submissions.map((s, i) => (
-                  <tr key={i}>
-                    <td className="px-4 py-3 text-slate-900">{s.type || "quote"}</td>
-                    <td className="px-4 py-3 text-slate-700">{s.name || s.businessName || "—"}</td>
-                    <td className="px-4 py-3 text-slate-700">{s.email || "—"}</td>
-                    <td className="px-4 py-3 text-slate-600">{s.sourcePage || "—"}</td>
-                    <td className="px-4 py-3 text-slate-600">{s.submittedAt ? new Date(s.submittedAt).toLocaleString() : "—"}</td>
-                  </tr>
-                ))}
+                {submissions.map((s) => {
+                  const meta = (() => {
+                    try { return JSON.parse(s.notes || "{}"); } catch { return {}; }
+                  })();
+                  return (
+                    <tr key={s.id}>
+                      <td className="px-4 py-3 text-slate-900">{meta.type || "quote"}</td>
+                      <td className="px-4 py-3 text-slate-700">{s.name || meta.businessName || "—"}</td>
+                      <td className="px-4 py-3 text-slate-700">{s.email || "—"}</td>
+                      <td className="px-4 py-3 text-slate-700">{s.phone || "—"}</td>
+                      <td className="px-4 py-3 text-slate-600">{s.location || meta.sourcePage || "—"}</td>
+                      <td className="px-4 py-3 text-slate-600">{s.created_at ? new Date(s.created_at).toLocaleString() : "—"}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -131,10 +143,9 @@ export default function AdminLitePage() {
       <div className="mt-8 rounded-xl border border-slate-200 bg-white p-5">
         <h2 className="text-lg font-bold text-slate-900">Next steps</h2>
         <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-slate-600">
-          <li>Connect PostgreSQL/Supabase/Neon for persistent data storage</li>
-          <li>Replace the in-memory API route with a real backend endpoint</li>
           <li>Set up email integration (Resend, SendGrid, SMTP) to notify operators of new leads</li>
           <li>Add authentication to protect this admin page</li>
+          <li>Migrate operators and prices from static data to Supabase tables</li>
         </ul>
       </div>
     </div>

@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/src/lib/supabase";
+
 export default function ContactPage() {
   const router = useRouter();
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
@@ -22,16 +24,19 @@ export default function ContactPage() {
     e.preventDefault();
     if (!validate()) return;
     setSubmitting(true);
-    try {
-      await fetch("/api/quote", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, type: "contact", sourcePage: "/contact/" }),
-      });
-      router.push("/thank-you/");
-    } catch {
+    const { error } = await supabase.from("leads").insert({
+      name: form.name,
+      email: form.email,
+      phone: null,
+      storage_type: null,
+      location: null,
+      notes: JSON.stringify({ type: "contact", sourcePage: "/contact/", subject: form.subject, message: form.message }),
+    });
+    if (error) {
       setSubmitting(false);
+      return;
     }
+    router.push("/thank-you/");
   }
 
   function update(field: string, value: string) {

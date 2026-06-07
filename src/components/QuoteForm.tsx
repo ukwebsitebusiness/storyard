@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/src/lib/supabase";
 
 interface QuoteFormProps {
   sourcePage: string;
@@ -40,16 +41,19 @@ export default function QuoteForm({ sourcePage, defaultStorageType = "", default
     e.preventDefault();
     if (!validate()) return;
     setSubmitting(true);
-    try {
-      await fetch("/api/quote", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, sourcePage, operatorSlug }),
-      });
-      router.push("/thank-you/");
-    } catch {
+    const { error } = await supabase.from("leads").insert({
+      name: form.name,
+      email: form.email,
+      phone: form.phone || null,
+      storage_type: form.storageType || null,
+      location: form.location || null,
+      notes: JSON.stringify({ sourcePage, operatorSlug, size: form.size, date: form.date, message: form.message }),
+    });
+    if (error) {
       setSubmitting(false);
+      return;
     }
+    router.push("/thank-you/");
   }
 
   function update(field: string, value: string) {
