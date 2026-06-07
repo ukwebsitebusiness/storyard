@@ -47,9 +47,22 @@ export default async function OperatorDetailPage({ params }: { params: Promise<{
     description: operator.description,
   };
 
+  const faqPage = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: generalFaqs.slice(0, 4).map((f) => ({
+      "@type": "Question",
+      name: f.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: f.answer,
+      },
+    })),
+  };
+
   return (
     <>
-      <JsonLd data={[breadcrumb, localBusiness]} />
+      <JsonLd data={[breadcrumb, localBusiness, faqPage]} />
       <div className="mx-auto max-w-7xl px-4 py-8">
         <div className="text-sm text-slate-500">
           <Link href="/" className="hover:underline">Home</Link> <span className="mx-1">/</span>{" "}

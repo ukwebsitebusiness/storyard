@@ -68,6 +68,27 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Trust badges */}
+      <section className="border-b border-slate-200 bg-white py-4">
+        <div className="mx-auto max-w-7xl px-4">
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8">
+            {[
+              { label: "Public price data", sub: "No hidden fees" },
+              { label: "Local operators only", sub: "Isle of Man" },
+              { label: "No fake reviews", sub: "Independent listings" },
+            ].map((badge) => (
+              <div key={badge.label} className="flex items-center gap-2">
+                <CheckCircle className="h-4 w-4 text-teal-600" />
+                <div>
+                  <p className="text-xs font-semibold text-slate-900">{badge.label}</p>
+                  <p className="text-[10px] text-slate-500">{badge.sub}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Popular locations */}
       <section className="py-14">
         <div className="mx-auto max-w-7xl px-4">

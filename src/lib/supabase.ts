@@ -50,6 +50,8 @@ export type Database = {
           storage_type: string | null;
           location: string | null;
           notes: string | null;
+          status: string | null;
+          assigned_to: string | null;
           created_at: string;
         };
         Insert: Omit<Database["public"]["Tables"]["leads"]["Row"], "id" | "created_at">;
