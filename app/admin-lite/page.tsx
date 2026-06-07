@@ -26,13 +26,25 @@ const STATUS_COLORS: Record<string, string> = {
   archived: "bg-slate-100 text-slate-600 border-slate-200",
 };
 
+const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "storyard2024";
+
 export default function AdminLitePage() {
   const [submissions, setSubmissions] = useState<Lead[]>([]);
   const [error, setError] = useState("");
   const [filter, setFilter] = useState("all");
   const [updateMsg, setUpdateMsg] = useState("");
+  const [password, setPassword] = useState("");
+  const [authenticated, setAuthenticated] = useState(false);
+  const [authError, setAuthError] = useState("");
 
   useEffect(() => {
+    if (typeof window !== "undefined" && sessionStorage.getItem("admin_auth") === "1") {
+      setAuthenticated(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!authenticated) return;
     supabase
       .from("leads")
       .select("*")
@@ -41,7 +53,7 @@ export default function AdminLitePage() {
         if (error) setError(error.message);
         else if (data) setSubmissions(data as Lead[]);
       });
-  }, []);
+  }, [authenticated]);
 
   async function updateStatus(id: string, status: string) {
     const { error } = await supabase.from("leads").update({ status }).eq("id", id);
@@ -77,10 +89,62 @@ export default function AdminLitePage() {
   const unclaimedCount = operators.length - claimedCount;
   const workingCount = operators.filter((o) => o.websiteStatus === "WORKING").length;
 
+  function login(e: React.FormEvent) {
+    e.preventDefault();
+    if (password === ADMIN_PASSWORD) {
+      setAuthenticated(true);
+      setAuthError("");
+      sessionStorage.setItem("admin_auth", "1");
+    } else {
+      setAuthError("Incorrect password.");
+    }
+  }
+
+  if (!authenticated) {
+    return (
+      <div className="mx-auto max-w-sm px-4 py-20">
+        <h1 className="text-2xl font-bold text-slate-900">Admin Lite</h1>
+        <p className="mt-1 text-sm text-slate-600">Enter the admin password to view leads and listings.</p>
+        <form onSubmit={login} className="mt-6 space-y-4">
+          <div>
+            <label className="mb-1 block text-sm font-medium text-slate-700">Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-900 focus:border-teal-500 focus:outline-none"
+              placeholder="Admin password"
+            />
+            {authError && <p className="mt-1 text-xs text-red-600">{authError}</p>}
+          </div>
+          <button
+            type="submit"
+            className="w-full rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-slate-800"
+          >
+            Sign in
+          </button>
+        </form>
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
-      <h1 className="text-2xl font-bold text-slate-900">Admin Lite</h1>
-      <p className="mt-1 text-sm text-slate-600">Overview of listings, prices and leads.</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">Admin Lite</h1>
+          <p className="mt-1 text-sm text-slate-600">Overview of listings, prices and leads.</p>
+        </div>
+        <button
+          onClick={() => {
+            setAuthenticated(false);
+            sessionStorage.removeItem("admin_auth");
+          }}
+          className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50"
+        >
+          Sign out
+        </button>
+      </div>
 
       {error && (
         <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
