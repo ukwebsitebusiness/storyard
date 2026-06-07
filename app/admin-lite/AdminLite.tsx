@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { operators } from "@/src/data/operators";
 import { prices } from "@/src/data/prices";
-import { supabase } from "@/src/lib/supabase";
+import { getSupabaseClient } from "@/src/lib/getSupabaseClient";
 
 interface Lead {
   id: string;
@@ -45,18 +45,20 @@ export default function AdminLite() {
 
   useEffect(() => {
     if (!authenticated) return;
-    supabase
-      .from("leads")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .then(({ data, error }) => {
-        if (error) setError(error.message);
-        else if (data) setSubmissions(data as Lead[]);
-      });
+    getSupabaseClient().then((client) =>
+      client
+        .from("leads")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .then(({ data, error }) => {
+          if (error) setError(error.message);
+          else if (data) setSubmissions(data as Lead[]);
+        })
+    );
   }, [authenticated]);
 
   async function updateStatus(id: string, status: string) {
-    const { error } = await supabase.from("leads").update({ status }).eq("id", id);
+    const { error } = await (await getSupabaseClient()).from("leads").update({ status }).eq("id", id);
     if (error) {
       setUpdateMsg("Failed to update status: " + error.message);
     } else {
@@ -67,7 +69,7 @@ export default function AdminLite() {
   }
 
   async function assignLead(id: string, assigned_to: string) {
-    const { error } = await supabase.from("leads").update({ assigned_to }).eq("id", id);
+    const { error } = await (await getSupabaseClient()).from("leads").update({ assigned_to }).eq("id", id);
     if (error) {
       setUpdateMsg("Failed to assign: " + error.message);
     } else {

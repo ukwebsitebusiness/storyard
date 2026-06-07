@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/src/lib/supabase";
+import { getSupabaseClient } from "@/src/lib/getSupabaseClient";
 
 export default function ContactForm() {
   const router = useRouter();
@@ -24,7 +24,7 @@ export default function ContactForm() {
     e.preventDefault();
     if (!validate()) return;
     setSubmitting(true);
-    const { error } = await supabase.from("leads").insert({
+    const { error } = await (await getSupabaseClient()).from("leads").insert({
       name: form.name,
       email: form.email,
       phone: null,
