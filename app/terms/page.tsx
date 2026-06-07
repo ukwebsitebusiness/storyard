@@ -1,7 +1,7 @@
 ﻿import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms and Conditions — Storyard",
+  title: "Terms and Conditions — Storyard Test",
   description: "Read the Storyard terms and conditions. By using our site you agree to these terms.",
 };
 
