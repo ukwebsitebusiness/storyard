@@ -1,5 +1,12 @@
+import { Metadata } from "next";
 import Link from "next/link";
 import { operators } from "@/src/data/operators";
+
+export const metadata: Metadata = {
+  title: "Storyard — Find Secure Storage Across the Isle of Man",
+  description:
+    "Compare container storage, self-storage, business storage, household storage and trade storage near Douglas, Braddan, Ballasalla, Jurby, Peel, Ramsey and beyond.",
+};
 import { locations } from "@/src/data/locations";
 import { prices } from "@/src/data/prices";
 import { storageTypes } from "@/src/data/storageTypes";
