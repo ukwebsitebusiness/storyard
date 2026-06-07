@@ -304,9 +304,9 @@ export default function AdminLitePage() {
       <div className="mt-8 rounded-xl border border-slate-200 bg-white p-5">
         <h2 className="text-lg font-bold text-slate-900">Next steps</h2>
         <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-slate-600">
-          <li>Set up email integration (Resend, SendGrid, SMTP) to notify operators of new leads</li>
-          <li>Add authentication to protect this admin page</li>
-          <li>Migrate operators and prices from static data to Supabase tables</li>
+          <li>Add your Resend API key and NOTIFY_TO_EMAIL to Vercel environment variables to enable email notifications</li>
+          <li>Set up a custom domain in Resend for the from-email address</li>
+          <li>Review and assign leads using the status and assignment filters above</li>
         </ul>
       </div>
     </div>

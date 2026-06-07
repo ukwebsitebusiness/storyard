@@ -36,6 +36,19 @@ export default function ClaimListingPage() {
       setSubmitting(false);
       return;
     }
+    fetch("/api/notify/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: form.contactName || form.businessName,
+        email: form.email,
+        phone: form.phone,
+        storage_type: "Claim listing",
+        location: null,
+        message: `Business: ${form.businessName}\nWebsite: ${form.website}\n\n${form.message}`,
+        sourcePage: "/claim-listing/",
+      }),
+    }).catch(() => {});
     router.push("/thank-you/");
   }
 

@@ -53,6 +53,21 @@ export default function QuoteForm({ sourcePage, defaultStorageType = "", default
       setSubmitting(false);
       return;
     }
+    // Fire-and-forget email notification
+    fetch("/api/notify/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        storage_type: form.storageType,
+        location: form.location,
+        message: form.message,
+        sourcePage,
+        operatorSlug,
+      }),
+    }).catch(() => {});
     router.push("/thank-you/");
   }
 

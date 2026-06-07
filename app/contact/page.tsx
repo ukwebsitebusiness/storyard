@@ -36,6 +36,18 @@ export default function ContactPage() {
       setSubmitting(false);
       return;
     }
+    fetch("/api/notify/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: form.name,
+        email: form.email,
+        storage_type: "Contact form",
+        location: null,
+        message: `Subject: ${form.subject}\n\n${form.message}`,
+        sourcePage: "/contact/",
+      }),
+    }).catch(() => {});
     router.push("/thank-you/");
   }
 

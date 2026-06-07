@@ -36,6 +36,19 @@ export default function ListYourBusinessPage() {
       setSubmitting(false);
       return;
     }
+    fetch("/api/notify/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: form.contactName || form.businessName,
+        email: form.email,
+        phone: form.phone,
+        storage_type: form.types || "List business",
+        location: form.locations,
+        message: `Business: ${form.businessName}\nWebsite: ${form.website}\n\n${form.message}`,
+        sourcePage: "/list-your-storage-business/",
+      }),
+    }).catch(() => {});
     router.push("/thank-you/");
   }
 
