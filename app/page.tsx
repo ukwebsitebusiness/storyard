@@ -43,8 +43,11 @@ export default function Home() {
       />
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-slate-900 to-slate-800 pb-20 pt-16 text-white">
-        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "32px 32px" }} />
+      <section
+        className="relative overflow-hidden bg-cover bg-center pb-20 pt-16 text-white"
+        style={{ backgroundImage: "url(/images/herostoryard.png)" }}
+      >
+        <div className="absolute inset-0 bg-slate-900/60" />
         <div className="relative mx-auto max-w-7xl px-4">
           <div className="mx-auto max-w-3xl text-center">
             <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
