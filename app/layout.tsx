@@ -32,6 +32,9 @@ export const metadata: Metadata = {
     description:
       "Compare container storage, self-storage, business storage and trade storage near Douglas, Braddan, Ballasalla, Jurby and beyond.",
   },
+  icons: {
+    icon: "/images/favicon.png",
+  },
   robots: {
     index: true,
     follow: true,
