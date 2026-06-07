@@ -1,5 +1,5 @@
 ﻿import { Metadata } from "next";
-import AdminLite from "./AdminLite";
+import AdminLiteWrapper from "./AdminLiteWrapper";
 
 export const metadata: Metadata = {
   title: "Admin Lite — Storyard",
@@ -11,5 +11,5 @@ export const metadata: Metadata = {
 };
 
 export default function AdminLitePage() {
-  return <AdminLite />;
+  return <AdminLiteWrapper />;
 }

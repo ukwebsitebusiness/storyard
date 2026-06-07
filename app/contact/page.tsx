@@ -1,5 +1,5 @@
 ﻿import { Metadata } from "next";
-import ContactForm from "./ContactForm";
+import ContactFormWrapper from "./ContactFormWrapper";
 
 export const metadata: Metadata = {
   title: "Contact Storyard — Isle of Man Storage Marketplace",
@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
-  return <ContactForm />;
+  return <ContactFormWrapper />;
 }

@@ -1,5 +1,5 @@
 ﻿import { Metadata } from "next";
-import ListBusinessForm from "./ListBusinessForm";
+import ListBusinessFormWrapper from "./ListBusinessFormWrapper";
 
 export const metadata: Metadata = {
   title: "List Your Storage Business — Storyard",
@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function ListYourBusinessPage() {
-  return <ListBusinessForm />;
+  return <ListBusinessFormWrapper />;
 }

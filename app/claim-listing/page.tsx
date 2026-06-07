@@ -1,5 +1,5 @@
 ﻿import { Metadata } from "next";
-import ClaimListingForm from "./ClaimListingForm";
+import ClaimListingFormWrapper from "./ClaimListingFormWrapper";
 
 export const metadata: Metadata = {
   title: "Claim Your Listing — Storyard",
@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function ClaimListingPage() {
-  return <ClaimListingForm />;
+  return <ClaimListingFormWrapper />;
 }
