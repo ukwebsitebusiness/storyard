@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: "/admin-lite/",
     },
-    sitemap: "https://storyard.im/sitemap.xml",
+    sitemap: "https://storyard.co.uk/sitemap.xml",
   };
 }

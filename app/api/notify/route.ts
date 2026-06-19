@@ -2,7 +2,7 @@ import { Resend } from "resend";
 import { NextResponse } from "next/server";
 
 const fromEmail = process.env.NOTIFY_FROM_EMAIL || "Storyard <no-reply@storyard.im>";
-const toEmail = process.env.NOTIFY_TO_EMAIL || "";
+const toEmail = process.env.NOTIFY_TO_EMAIL || "info@storyard.co.uk";
 
 export async function POST(request: Request) {
   try {

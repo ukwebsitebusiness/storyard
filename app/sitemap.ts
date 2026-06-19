@@ -6,7 +6,7 @@ import { storageTypes } from "@/src/data/storageTypes";
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = "https://storyard.im";
+  const base = "https://storyard.co.uk";
 
   const staticRoutes = [
     "/",
